@@ -9,6 +9,8 @@ function BarChart() {
         datasets: []
     });
 
+    const [loading, setLoading] = useState(false);
+
     const chart = async () => {
         let labelName = [];
         let labelTotal = [];
@@ -47,6 +49,7 @@ function BarChart() {
                         }
                     ]
                 });
+                setLoading(false);
             })
             .catch((err) => {
                 console.log({ err });
@@ -57,17 +60,32 @@ function BarChart() {
     // console.log({ chartData });
     useEffect(() => {
         chart();
+        // console.log('update chart');
     }, []);
+
+    const handleClick = () => {
+        setLoading(true);
+        chart();
+    };
 
     // return <Bar data={chartData} />;
     return (
         <div className="App mt-3  flex flex-col justify-center">
             {/* <h1 className="text-center">Monitor by Automation</h1> */}
             <button
-                className="py-3 px-4 bg-blue-600 rounded text-white font-bold self-end hover:bg-blue-400"
-                onClick={chart}
+                className={`py-3 px-4 bg-blue-600 rounded text-white font-bold self-end hover:bg-blue-400 ${loading}`}
+                onClick={handleClick}
+                disabled={loading}
             >
-                Refresh
+                {/* Refresh */}
+                {loading ? (
+                    <div
+                        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                        role="status"
+                    ></div>
+                ) : (
+                    'Refresh'
+                )}
             </button>
             <Bar
                 data={chartData}
@@ -106,6 +124,14 @@ function BarChart() {
                     reverse: true
                 }}
             />
+
+            {/* <div
+                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                role="status"
+            ></div>
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                Loading...
+            </span> */}
         </div>
     );
 }
