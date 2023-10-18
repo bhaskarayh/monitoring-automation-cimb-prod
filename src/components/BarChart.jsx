@@ -34,7 +34,8 @@ function BarChart() {
                             label: 'Total',
                             data: labelTotal,
                             // backgroundColor: ['rgba(75, 192, 192, 0.6)'],
-                            backgroundColor: ['#f46a9b'],
+                            backgroundColor: [' rgb(37, 99, 235, 0.8)'],
+                            // backgroundColor: ['#f46a9b'],
                             borderWidth: 1,
                             barWidth: 10,
                             // minBarLength: 20,
@@ -73,7 +74,7 @@ function BarChart() {
         <div className="App mt-3  flex flex-col justify-center">
             {/* <h1 className="text-center">Monitor by Automation</h1> */}
             <button
-                className={`py-3 px-4 bg-blue-600 rounded text-white font-bold self-end hover:bg-blue-400 ${loading}`}
+                className={`py-3 px-4 bg-blue-500 rounded text-white font-bold self-end hover:bg-blue-400 ${loading}`}
                 onClick={handleClick}
                 disabled={loading}
             >
