@@ -10,10 +10,13 @@ function BarChart() {
     });
 
     const [loading, setLoading] = useState(false);
+    const [totalAutomation, setTotalAutomation] = useState(0);
+    const [totalProcess, setTotalProcess] = useState(0);
 
     const chart = async () => {
         let labelName = [];
         let labelTotal = [];
+        let tempProcess = 0;
 
         await axios
             .get(
@@ -26,6 +29,7 @@ function BarChart() {
                     // console.log({ dataObj });
                     labelName.push(dataObj.name);
                     labelTotal.push(dataObj.total);
+                    tempProcess += dataObj.total || 0;
                 }
                 setChartData({
                     labels: labelName,
@@ -33,35 +37,32 @@ function BarChart() {
                         {
                             label: 'Total',
                             data: labelTotal,
-                            // backgroundColor: ['rgba(75, 192, 192, 0.6)'],
                             backgroundColor: [' rgb(37, 99, 235, 0.8)'],
-                            // backgroundColor: ['#f46a9b'],
                             borderWidth: 1,
                             barWidth: 10,
-                            // minBarLength: 20,
-                            // barThickness: 20,
-                            // barPercentage: 10,
-                            // categoryPercentage: 20,
-
                             legend: {
                                 position: 'bottom',
                                 display: true
+                            },
+                            plugins: {
+                                datalabels: {
+                                    anchor: 'end'
+                                }
                             }
                         }
                     ]
                 });
                 setLoading(false);
+                setTotalProcess(tempProcess);
+                setTotalAutomation(labelTotal.length);
             })
             .catch((err) => {
                 console.log({ err });
             });
-        console.log({ chartData, labelName });
     };
 
-    // console.log({ chartData });
     useEffect(() => {
         chart();
-        // console.log('update chart');
     }, []);
 
     const handleClick = () => {
@@ -69,25 +70,27 @@ function BarChart() {
         chart();
     };
 
-    // return <Bar data={chartData} />;
     return (
         <div className="App mt-3  flex flex-col justify-center">
-            {/* <h1 className="text-center">Monitor by Automation</h1> */}
-            <button
-                className={`py-3 px-4 bg-blue-500 rounded text-white font-bold self-end hover:bg-blue-400 ${loading}`}
-                onClick={handleClick}
-                disabled={loading}
-            >
-                {/* Refresh */}
-                {loading ? (
-                    <div
-                        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
-                    ></div>
-                ) : (
-                    'Refresh'
-                )}
-            </button>
+            <div className="flex flex-row justify-end gap-10 items-center mb-3 bg-dark">
+                <p>Automation: {totalAutomation.toLocaleString()}</p>
+                <p>Total Process: {totalProcess.toLocaleString()}</p>
+                <button
+                    className={`py-3 px-4 bg-blue-500 rounded text-white font-bold self-end hover:bg-blue-400 ${loading}`}
+                    onClick={handleClick}
+                    disabled={loading}
+                >
+                    {/* Refresh */}
+                    {loading ? (
+                        <div
+                            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                            role="status"
+                        ></div>
+                    ) : (
+                        'Refresh'
+                    )}
+                </button>
+            </div>
             <Bar
                 data={chartData}
                 options={{
@@ -96,43 +99,31 @@ function BarChart() {
                             position: 'top'
                         },
                         y: {
-                            beginAtZero: true
-                            // ticks: {
-                            //     // max: Math.max(...data.datasets[0].data) + 10,
-                            //     display: false,
-                            //     beginAtZero: true
-                            // }
+                            beginAtZero: true,
+                            title: {
+                                display: true
+                            }
                         }
                     },
 
                     plugins: {
                         datalabels: {
                             anchor: 'end',
-                            align: 'top',
+                            align: 'end',
                             formatter: Math.round,
                             font: {
                                 weight: 'bold'
                             }
+                        },
+                        legend: {
+                            display: false
                         }
                     },
-
-                    // backgroundColor: 'rgba(0, 0, 255, 0.8)',
-                    // barPercentage: 0.9,
-                    // barWidth: 20,
-                    // maintainAspectRatio: false,
                     responsive: true,
                     indexAxis: 'y',
                     reverse: true
                 }}
             />
-
-            {/* <div
-                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
-            ></div>
-            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                Loading...
-            </span> */}
         </div>
     );
 }
