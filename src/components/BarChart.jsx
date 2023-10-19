@@ -71,8 +71,8 @@ function BarChart() {
     };
 
     return (
-        <div className="App mt-3  flex flex-col justify-center">
-            <div className="flex flex-row justify-end gap-10 items-center mb-3 bg-dark">
+        <div className="App mt-3  flex flex-col justify-center overflow-auto">
+            <div className="flex flex-row lg:justify-end justify-around lg:gap-10 gap-2 items-center mb-3 bg-dark">
                 <p>Automation: {totalAutomation.toLocaleString()}</p>
                 <p>Total Process: {totalProcess.toLocaleString()}</p>
                 <button
